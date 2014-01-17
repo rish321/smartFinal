@@ -1,5 +1,4 @@
 <?php
-include_once 'psl-config.php';
  
 function sec_session_start() {
     $session_name = 'sec_session_id';   // Set a custom session name
@@ -8,27 +7,41 @@ function sec_session_start() {
     $httponly = true;
     // Forces sessions to only use cookies.
     if (ini_set('session.use_only_cookies', 1) === FALSE) {
-        header("Location: ../error.php?err=Could not initiate a safe session (ini_set)");
+        header("Location: ../../user_login.php?err=Could not initiate a safe session (ini_set)");
         exit();
     }
     // Gets current cookies params.
-    $cookieParams = session_get_cookie_params();
-    session_set_cookie_params($cookieParams["lifetime"],
-        $cookieParams["path"], 
-        $cookieParams["domain"], 
-        $secure,
-        $httponly);
+  //  $cookieParams = session_get_cookie_params();
+  //  session_set_cookie_params($cookieParams["lifetime"], $cookieParams["path"], $cookieParams["domain"], $secure, $httponly);
+    //session_set_cookie_params($cookieParams["lifetime"], "/smartphone/",  $cookieParams["domain"] , $secure, $httponly);
+    session_set_cookie_params(2592000, "/smartphone/",  $cookieParams["domain"] , $secure, $httponly);
     // Sets the session name to the one set above.
     session_name($session_name);
-    session_start();            // Start the PHP session 
+    session_start();       	     // Start the PHP session 
     session_regenerate_id();    // regenerated the session, delete the old one. 
 }
 function login($email, $password, $mysqli) {
     // Using prepared statements means that SQL injection is not possible. 
-    if ($stmt = $mysqli->prepare("SELECT id, username, password, salt 
-        FROM members
-       WHERE email = ?
-        LIMIT 1")) {
+$email_query  = "select * from members where email='$email' and password='$password';";
+$result = mysqli_query($mysqli,$email_query);
+if(mysqli_num_rows($result))
+{
+//	return $email_query;
+	// Password is correct!
+	// Get the user-agent string of the user.
+	$user_browser = $_SERVER['HTTP_USER_AGENT'];
+	// XSS protection as we might print this value
+//	$user_id = preg_replace("/[^0-9]+/", "", $user_id);
+//	$_SESSION['user_id'] = $user_id;
+	// XSS protection as we might print this value
+	$email = preg_replace("/[^a-zA-Z0-9@\\._\-]+/", "", $email);
+	$_SESSION['email'] = $email;
+	$_SESSION['login_string'] = hash('sha512', $password . $user_browser);
+	// Login successful.
+	return true;
+}
+/*
+    if ($stmt = $mysqli->prepare("SELECT id, username, password, salt   FROM members   WHERE email = ?   LIMIT 1")) {
         $stmt->bind_param('s', $email);  // Bind "$email" to parameter.
         $stmt->execute();    // Execute the prepared query.
         $stmt->store_result();
@@ -75,10 +88,11 @@ function login($email, $password, $mysqli) {
                     return false;
                 }
             }
-        } else {
+        }  */
+	else {
             // No user exists.
             return false;
-        }
+       //}
     }
 }
 function checkbrute($user_id, $mysqli) {
@@ -106,26 +120,36 @@ function checkbrute($user_id, $mysqli) {
         }
     }
 }
-function login_check($mysqli) {
+
+function login_check($mysqli2) {
     // Check if all session variables are set 
-    if (isset($_SESSION['user_id'], 
-                        $_SESSION['username'], 
-                        $_SESSION['login_string'])) {
+    if (isset( $_SESSION['email'],  $_SESSION['login_string'])) {
  
-        $user_id = $_SESSION['user_id'];
+       // $user_id = $_SESSION['user_id'];
         $login_string = $_SESSION['login_string'];
-        $username = $_SESSION['username'];
+        $email = $_SESSION['email'];
  
         // Get the user-agent string of the user.
         $user_browser = $_SERVER['HTTP_USER_AGENT'];
  
-        if ($stmt = $mysqli->prepare("SELECT password 
-                                      FROM members 
-                                      WHERE id = ? LIMIT 1")) {
+	$user_query = "SELECT password FROM members WHERE email='$email'  LIMIT 1;";
+	$result = mysqli_query($mysqli2,$user_query);
+	if(mysqli_num_rows($result))
+		return true;
+	else 
+		return false;
+
+	if ($stmt = $mysqli->prepare("SELECT password FROM members WHERE email='$email'  LIMIT 1;")) {
+		return $user_query;
             // Bind "$user_id" to parameter. 
-            $stmt->bind_param('i', $user_id);
-            $stmt->execute();   // Execute the prepared query.
+            //$stmt->bind_param('i', $user_id);
+            if($stmt->execute())
+	    	return true;
+	    else 
+		return false;
+		    // Execute the prepared query.
             $stmt->store_result();
+	    return true;
  
             if ($stmt->num_rows == 1) {
                 // If the user exists get variables from result.

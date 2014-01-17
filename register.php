@@ -18,6 +18,7 @@ hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </scri
 <!--slider-->
 <link href="css/slider.css" rel="stylesheet" type="text/css" media="all"/>
 <script type="text/javascript" src="js/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="root/js/forms2.js"></script>
 <script type="text/javascript" src="js/jquery.nivo.slider.js"></script>
 <script type="text/javascript">
     $(window).load(function() {
@@ -50,7 +51,24 @@ hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </scri
 		</div>
 		 <div class="clear"></div> 
 	   </div>
-   </div>	
+	   </div>	
+
+<!-- Slider menu --> 
+	   <div class="banner">
+	   <div class="nav">
+	   <div class="navControl">
+	   <a href="#">Menu</a>
+	   </div>
+	   <ul>
+	   <li><a href="index.html">Home</a></li>
+	   <li><a href="about.html">About us</a></li>
+	   <li><a href="contact.html">Contact</a></li>
+	   </ul>
+	   </div>
+	   </div>
+
+<!--  End Banner -->
+
   <div class="main">
 	   <div class="content-top">
 			 <div class="top-box" >
@@ -75,31 +93,19 @@ include_once 'root/includes/functions.php';
         </ul>
 	<br />
 	<br />
-        <form action="root/includes/register_exec.php" 
-                method="post" 
-                name="registration_form">
-	     <table align='center' style='margin: 0px auto; width:80%' >
-             <tr><td align='left'>Username:</td><td><input type='text'  name='username'   id='username' /></td> </tr>
+        <form name="register_form" action="root/includes/register_exec.php" method="post" name="registration_form" onsubmit="return regformhash();" >
+	     <table align='center' style='margin: 0px auto; width:50%' >
+             <tr><td align='left'>Username:</td><td align='left' ><input type='text'  name='username'   id='username' /></td> </tr>
 
-            <tr><td align='left' >Email:</td><td> <input type="text" name="email" id="email" /></td></tr>
+            <tr><td align='left' >Email:</td><td align='left' >  <input type="text" name="email" id="email" /></td></tr>
 
-            <tr><td align='left'>Password:</td><td> <input type="password"
-                             name="password" 
-                             id="password"/></td></tr>
-            <tr><td align='left'>Confirm password:</td><td> <input type="password" 
-                                     name="confirmpwd" 
-                                     id="confirmpwd" /></td></tr>
-	    
+            <tr><td align='left'>Password:</td><td align='left' > <input type="password" name="password" id="password"/></td></tr>
+            <tr><td align='left'>Confirm password:</td><td align='left' > <input type="password" name="confirmpwd" id="confirmpwd" /></td></tr>
+            <tr><td align='left'>&nbsp;</td><td align='left' > <input type="hidden" name="pass2" id="pass2" value="chacha" /></td></tr>
+            <tr><td align='left'><input type="submit" value="Register" /></td><td align='left' ><a href="user_login.html">Already Registered ?</a></td></tr>
 	    </table>
 
-            <input type="submit"  value="Register" >
-<!--            <input type="button" 
-                   value="Register" 
-                   onclick="return regformhash(this.form,
-                                   this.form.username,
-                                   this.form.email,
-                                   this.form.password,
-                                   this.form.confirmpwd);" /> -->
+<!--            <input type="button" value="Register" onclick="return regformhash(this.form, this.form.username,this.form.email,this.form.password,this.form.confirmpwd);" /> -->
         </form>
 
 

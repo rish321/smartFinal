@@ -15,7 +15,18 @@ function formhash(form, password) {
     form.submit();
 }
  
-function regformhash(form, uid, email, password, conf) {
+function regformhash() {
+
+
+	//document.writeln("<script type='text/javascript' src='sha512.js'></script>");
+	form = document.forms[0];
+	uid = document.forms[0].username;
+	email = document.forms[0].email;
+	password = document.forms[0].password;
+	conf = document.forms[0].confirmpwd;
+	pass2 = document.forms[0].pass2;
+	alert(pass2.value);
+	//return false;
      // Check each field has a value
     if (uid.value == ''        || 
           email.value == ''  || 
@@ -61,15 +72,19 @@ function regformhash(form, uid, email, password, conf) {
     }
  
     // Create a new element input, this will be our hashed password field. 
-    var p = document.createElement("input");
+   // var p = document.createElement("input");
  
     // Add the new element to our form. 
-    form.appendChild(p);
-    p.name = "p";
-    p.type = "hidden";
-    p.value = hex_sha512(password.value);
+    //form.appendChild(p);
+   // p.name = "p";
+   // p.type = "hidden";
+  //  p.value = hex_sha512(password.value);
  
     // Make sure the plaintext password doesn't get sent. 
+    pass2.value = hex_sha512(password.value);
+   // pass2.value = "panwar 2";
+   alert(pass2.value);
+
     password.value = "";
     conf.value = "";
  

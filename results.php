@@ -86,7 +86,7 @@ if(mysqli_num_rows($result))
 	while($row = mysqli_fetch_array($result))
 	{
 		echo "<tr>";
-		echo "<td align='left'>". $row['SNo']. "<td align='left'>". $row['name']. "</td><td align='left'> <a href='tel:2125551212'>" . $row['mobile_no']. "</a> </td><td align='center'>". $row['rating']. "</td>" ;
+		echo "<td align='left'>". $row['SNo']. "<td align='left'>". $row['name']. "</td><td align='left'> <a href='tel:".$row['mobile_no']."'>" . $row['mobile_no']. "</a> </td><td align='center'>". $row['rating']. "</td>" ;
 		echo "</tr>";
 	}
 	echo "</table>";
